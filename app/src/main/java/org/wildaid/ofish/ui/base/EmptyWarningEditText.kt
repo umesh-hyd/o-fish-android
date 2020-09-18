@@ -2,13 +2,14 @@ package org.wildaid.ofish.ui.base
 
 import android.content.Context
 import android.graphics.Rect
+import android.text.Editable
 import android.util.AttributeSet
 import android.view.View
 import com.google.android.material.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class EmptyWarningEditText @JvmOverloads constructor(
+open class EmptyWarningEditText @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
@@ -31,5 +32,11 @@ class EmptyWarningEditText @JvmOverloads constructor(
             parent = parent.getParent()
         }
         return null
+    }
+
+    override fun getText(): Editable? {
+        return if (isEnabled) {
+            super.getText()
+        } else null
     }
 }

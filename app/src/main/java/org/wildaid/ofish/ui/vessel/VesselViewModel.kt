@@ -46,7 +46,7 @@ class VesselViewModel(val repository: Repository) : ViewModel() {
 
     private val infoFocusIds = setOf(
         R.id.vessel_name,
-        R.id.vessel_permit_number,
+//        R.id.vessel_permit_number,
         R.id.vessel_home_port,
         R.id.vessel_flag_state,
         R.id.vessel_note

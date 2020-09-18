@@ -83,7 +83,7 @@ fun setImageResource(imageView: ImageView, resource: Int) {
 }
 
 @BindingAdapter("app:focused")
-fun EditText.requestKeyBoard(focused: Boolean) {
+fun EditText.requestKeyBoard(focused: Boolean = true) {
     if (!focused) {
         return
     }

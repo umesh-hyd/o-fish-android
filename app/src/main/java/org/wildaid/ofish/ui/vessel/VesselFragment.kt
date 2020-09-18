@@ -45,8 +45,9 @@ class VesselFragment : BaseReportFragment(R.layout.fragment_vessel) {
         }
 
         requiredFields = arrayOf(
-            vessel_name_layout, vessel_permit_number_layout, vessel_home_port_layout,
-            vessel_flag_state_layout, delivery_business_layout, delivery_location_layout
+            vessel_name_layout, vessel_home_port_layout,
+            vessel_flag_state_layout, delivery_business_layout, delivery_location_layout,
+            vessel_permit_number_layout.editLayout
         )
 
         emsAdapter = EMSAdapter(
