@@ -35,6 +35,14 @@ class ViolationFragment : BaseReportFragment(R.layout.fragment_violation) {
         subscribeToSearchResult()
     }
 
+    override fun isAllRequiredFieldsNotEmpty(): Boolean {
+        return true
+    }
+
+    override fun validateForms(): Boolean {
+        return true
+    }
+
     override fun onResume() {
         super.onResume()
         fragmentViewModel.refreshIssuedTo()
@@ -56,8 +64,8 @@ class ViolationFragment : BaseReportFragment(R.layout.fragment_violation) {
             viewLifecycleOwner,
             Observer { displaySeizure(it) })
 
-        fragmentViewModel.buttonId.observe(
-            viewLifecycleOwner, EventObserver(::onButtonClicked)
+        fragmentViewModel.violationUserEventLiveData.observe(
+            viewLifecycleOwner, EventObserver(::handleUserEvent)
         )
     }
 
@@ -168,10 +176,10 @@ class ViolationFragment : BaseReportFragment(R.layout.fragment_violation) {
         })
     }
 
-    private fun onButtonClicked(buttonId: Int) {
+    private fun handleUserEvent(event: ViolationViewModel.ViolationUserEvent) {
         hideKeyboard()
-        when (buttonId) {
-            R.id.btn_next -> {
+        when (event) {
+            ViolationViewModel.ViolationUserEvent.NextEvent -> {
                 onNextListener.onNextClicked()
             }
         }

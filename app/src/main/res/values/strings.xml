@@ -114,9 +114,11 @@
     <string name="draft_boardings">Draft Boardings</string>
     <string name="first_last_name">%s %s</string>
 
+    <!--  Profile  -->
     <string name="logout_dialog_title">You sure you want to log out</string>
     <string name="logout_dialog_message">You can only log back in once you have cellular service or are connected to WIFI with internet</string>
     <string name="logout_dialog_yes">Yes</string>
+    <string name="profile_toolbar_title">Officer Profile</string>
 
     <!--  Find records  -->
     <plurals name="crew_member_size">
@@ -194,7 +196,9 @@
     <string name="sure_to_submit">Are you sure you want to submit?</string>
     <string name="sure_to_submit_with_skipped">%s\n\nAre you sure you want to submit?</string>
     <string name="cancel_boarding">Cancel boarding?</string>
-    <string name="board_not_saved">This boarding will not be saved</string>
+    <string name="board_not_saved">If canceled, this boarding will not be saved. You may however save it to finish later.</string>
+    <string name="save_and_finish_later">Save and Finish Later</string>
+    <string name="draft_saved">Boarding saved as draft!</string>
     <string name="keep_editing">Keep Editing</string>
     <string name="boarding_submitted">Boarding Submitted!</string>
     <string name="boarding_canceled">Boarding Canceled</string>

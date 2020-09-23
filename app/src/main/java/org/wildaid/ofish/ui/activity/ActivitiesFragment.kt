@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_activities.*
 import org.wildaid.ofish.EventObserver
 import org.wildaid.ofish.R
@@ -20,12 +21,37 @@ import org.wildaid.ofish.util.setVisible
 class ActivitiesFragment : BaseReportFragment(R.layout.fragment_activities) {
     private val fragmentViewModel: ActivitiesViewModel by viewModels { getViewModelFactory() }
     private lateinit var fragmentDataBinding: FragmentActivitiesBinding
+    private lateinit var requiredFields: Array<TextInputLayout>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         subscribeToSearchResult()
         fragmentViewModel.initActivities(currentReport, currentReportPhotos)
     }
+
+    override fun isAllRequiredFieldsNotEmpty(): Boolean {
+        requiredFields.forEach {
+            val text = it.editText?.text
+            if (it.visibility == View.VISIBLE && text.isNullOrBlank()) {
+                return false
+            }
+        }
+        return true
+    }
+
+    override fun validateForms(): Boolean {
+        var result = true
+        requiredFields.forEach {
+            val text = it.editText?.text
+            if (it.visibility == View.VISIBLE && text.isNullOrBlank()) {
+                result = false
+                it.errorIconDrawable = resources.getDrawable(R.drawable.ic_error_outline, null)
+            }
+        }
+        isFieldCheckPassed = true
+        return result
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fragmentDataBinding = FragmentActivitiesBinding.bind(view)
@@ -40,7 +66,10 @@ class ActivitiesFragment : BaseReportFragment(R.layout.fragment_activities) {
             activity_gear_edit_layout
         )
 
-        fragmentViewModel.buttonId.observe(viewLifecycleOwner, EventObserver(::onButtonClicked))
+        fragmentViewModel.activitiesUserEvents.observe(
+            viewLifecycleOwner,
+            EventObserver(::handleUserEvent)
+        )
 
         fragmentViewModel.activityItemLiveData.observe(viewLifecycleOwner, Observer {
             fragmentDataBinding.activitiesNoteLayout.setVisible(it.attachments.hasNotes())
@@ -66,25 +95,25 @@ class ActivitiesFragment : BaseReportFragment(R.layout.fragment_activities) {
             fragmentViewModel::removePhotoFromGear
     }
 
-    private fun onButtonClicked(id: Int) {
-        when (id) {
-            R.id.activities_edit_text -> {
+    private fun handleUserEvent(event: ActivitiesViewModel.ActivitiesUserEvent) {
+        when (event) {
+            ActivitiesViewModel.ActivitiesUserEvent.ChooseActivityEvent -> {
                 val bundle =
                     bundleOf(BaseSearchFragment.SEARCH_ENTITY_KEY to SimpleSearchFragment.SearchActivity)
                 navigation.navigate(R.id.action_tabsFragment_to_simple_search, bundle)
             }
-            R.id.activity_fishery_edit_text -> {
+            ActivitiesViewModel.ActivitiesUserEvent.ChooseFisheryEvent -> {
                 val bundle =
                     bundleOf(BaseSearchFragment.SEARCH_ENTITY_KEY to SimpleSearchFragment.SearchFishery)
                 navigation.navigate(R.id.action_tabsFragment_to_simple_search, bundle)
             }
-            R.id.activity_gear_edit_text -> {
+            ActivitiesViewModel.ActivitiesUserEvent.ChooseGearEvent -> {
                 val bundle =
                     bundleOf(BaseSearchFragment.SEARCH_ENTITY_KEY to SimpleSearchFragment.SearchGear)
                 navigation.navigate(R.id.action_tabsFragment_to_simple_search, bundle)
             }
 
-            R.id.btn_next -> {
+            ActivitiesViewModel.ActivitiesUserEvent.NextEvent -> {
                 if (isFieldCheckPassed || validateForms()) {
                     onNextListener.onNextClicked()
                 } else {
@@ -92,19 +121,19 @@ class ActivitiesFragment : BaseReportFragment(R.layout.fragment_activities) {
                 }
             }
 
-            R.id.activity_activity_add_attachment -> {
+            ActivitiesViewModel.ActivitiesUserEvent.AddActivityAttachmentEvent -> {
                 askForAttachmentType(
                     onNoteSelected = fragmentViewModel::addNoteForActivity,
                     onPhotoSelected = fragmentViewModel::addPhotoForActivity
                 )
             }
-            R.id.activity_fishery_add_attachment -> {
+            ActivitiesViewModel.ActivitiesUserEvent.AddFisheryAttachmentEvent -> {
                 askForAttachmentType(
                     onNoteSelected = fragmentViewModel::addNoteForFishery,
                     onPhotoSelected = fragmentViewModel::addPhotoForFishery
                 )
             }
-            R.id.activity_gear_add_attachment -> {
+            ActivitiesViewModel.ActivitiesUserEvent.AddGearAttachmentEvent -> {
                 askForAttachmentType(
                     onNoteSelected = fragmentViewModel::addNoteForGear,
                     onPhotoSelected = fragmentViewModel::addPhotoForGear

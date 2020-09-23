@@ -24,9 +24,9 @@ class CatchViewModel(
     val catchItemsLiveData: LiveData<List<CatchItem>>
         get() = _catchItemsLiveData
 
-    private var _buttonId = MutableLiveData<Event<Int>>()
-    val buttonId: LiveData<Event<Int>>
-        get() = _buttonId
+    private var _catchUserEventLiveData = MutableLiveData<Event<CatchUserEvent>>()
+    val catchUserEventLiveData: LiveData<Event<CatchUserEvent>>
+        get() = _catchUserEventLiveData
 
     private val catchTitle = getString(R.string.catch_title)
     private val currentCatchItems = mutableListOf<CatchItem>()
@@ -46,7 +46,7 @@ class CatchViewModel(
     }
 
     fun onNextClicked() {
-        _buttonId.value = Event(R.id.btn_next)
+        _catchUserEventLiveData.value = Event(CatchUserEvent.Next)
     }
 
     fun addCatch() {
@@ -57,7 +57,6 @@ class CatchViewModel(
             catch = newCatch,
             title = "$catchTitle ${currentCatchItems.size + 1}",
             inEditMode = true,
-            amount = "",
             attachmentItem = AttachmentItem(newCatch.attachments!!)
         )
 
@@ -127,5 +126,9 @@ class CatchViewModel(
             },
             imageUri
         )
+    }
+
+    sealed class CatchUserEvent {
+        object Next : CatchUserEvent()
     }
 }
